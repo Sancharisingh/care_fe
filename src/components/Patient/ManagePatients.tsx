@@ -3,6 +3,8 @@ import { Link, navigate } from "raviger";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { Badge } from "@/components/ui/badge";
+
 import { Avatar } from "@/components/Common/Avatar";
 import ButtonV2 from "@/components/Common/ButtonV2";
 import { ExportMenu } from "@/components/Common/Export";
@@ -589,24 +591,26 @@ export const PatientManager = () => {
                   )}
                   {patient.review_time &&
                     !patient.last_consultation?.discharge_date &&
-                    Number(patient.last_consultation?.review_interval) > 0 &&
-                    dayjs().isAfter(patient.review_time) && (
-                      <Chip
-                        size="small"
-                        variant="danger"
-                        startIcon="l-clock"
-                        text="Review Missed"
-                      />
+                    Number(patient.last_consultation?.review_interval) > 0 && (
+                      <Badge
+                        variant={
+                          dayjs().isAfter(patient.review_time)
+                            ? "purple"
+                            : "success"
+                        }
+                        className="flex items-center gap-1"
+                      >
+                        <i className="icon-class l-clock"></i>
+                        {dayjs().isAfter(patient.review_time)
+                          ? `Review Missed ${Math.abs(
+                              dayjs().diff(dayjs(patient.review_time), "days"),
+                            )} days ago`
+                          : `Review Due in ${Math.abs(
+                              dayjs(patient.review_time).diff(dayjs(), "days"),
+                            )} days`}
+                      </Badge>
                     )}
-                  {patient.last_consultation?.is_readmission && (
-                    <Chip
-                      size="small"
-                      variant="custom"
-                      className="border-blue-600 bg-blue-100 text-blue-600"
-                      startIcon="l-repeat"
-                      text="Readmission"
-                    />
-                  )}
+
                   {patient.last_consultation?.suggestion === "A" &&
                     patient.last_consultation.facility === patient.facility &&
                     !patient.last_consultation.discharge_date && (
