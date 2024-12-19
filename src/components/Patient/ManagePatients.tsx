@@ -595,8 +595,8 @@ export const PatientManager = () => {
                       <Badge
                         variant={
                           dayjs().isAfter(patient.review_time)
-                            ? "purple"
-                            : "success"
+                            ? "destructive"
+                            : "primary"
                         }
                         className="flex items-center gap-1"
                       >
