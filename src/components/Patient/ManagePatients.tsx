@@ -31,7 +31,7 @@ import { parseOptionId } from "@/common/utils";
 
 import routes from "@/Utils/request/api";
 
-import Chip from "../../CAREUI/display/Chip";
+// import Chip from "../../CAREUI/display/Chip";
 import CountBlock from "../../CAREUI/display/Count";
 import FilterBadge from "../../CAREUI/display/FilterBadge";
 import RecordMeta from "../../CAREUI/display/RecordMeta";
@@ -110,7 +110,7 @@ export const PatientManager = () => {
 
   const tabValue =
     qParams.last_consultation__new_discharge_reason ||
-    qParams.is_active === "False"
+      qParams.is_active === "False"
       ? 1
       : 0;
 
@@ -460,7 +460,7 @@ export const PatientManager = () => {
           <div className="flex flex-col items-start gap-4 md:flex-row">
             <div className="w-full min-w-20 rounded-lg border border-secondary-300 bg-secondary-50 md:h-20 md:w-20">
               {patient?.last_consultation?.current_bed &&
-              patient?.last_consultation?.discharge_date === null ? (
+                patient?.last_consultation?.discharge_date === null ? (
                 <div className="tooltip flex h-full flex-col items-center justify-center">
                   <span className="w-full truncate px-1 text-center text-sm text-secondary-900">
                     {
@@ -546,12 +546,14 @@ export const PatientManager = () => {
                 <div className="flex flex-row flex-wrap justify-start gap-2">
                   {!isPatientMandatoryDataFilled(patient) && (
                     <span className="relative inline-flex">
-                      <Chip
+                      <Badge
                         size="small"
-                        variant="danger"
+                        variant="destructive"
                         startIcon="l-notes"
-                        text={t("patient_details_incomplete")}
-                      />
+                      >
+                        {t("patient_details_incomplete")}
+                      </Badge>
+
                       <span className="absolute -right-1 -top-1 flex h-3 w-3 items-center justify-center">
                         <span className="center absolute inline-flex h-4 w-4 animate-ping rounded-full bg-red-400"></span>
                         <span className="relative inline-flex h-3 w-3 rounded-full bg-red-600"></span>
@@ -560,17 +562,19 @@ export const PatientManager = () => {
                   )}
 
                   {isPatientMandatoryDataFilled(patient) &&
-                  (!patient.last_consultation ||
-                    patient.last_consultation?.facility !== patient.facility ||
-                    (patient.last_consultation?.discharge_date &&
-                      patient.is_active)) ? (
+                    (!patient.last_consultation ||
+                      patient.last_consultation?.facility !== patient.facility ||
+                      (patient.last_consultation?.discharge_date &&
+                        patient.is_active)) ? (
                     <span className="relative inline-flex">
-                      <Chip
+                      <Badge
                         size="small"
-                        variant="danger"
+                        variant="destructive"
                         startIcon="l-notes"
-                        text="No Consultation Filed"
-                      />
+                      >
+                        No Consultation Filed
+                      </Badge>
+
                       <span className="absolute -right-1 -top-1 flex h-3 w-3 items-center justify-center">
                         <span className="center absolute inline-flex h-4 w-4 animate-ping rounded-full bg-red-400"></span>
                         <span className="relative inline-flex h-3 w-3 rounded-full bg-red-600"></span>
@@ -579,13 +583,14 @@ export const PatientManager = () => {
                   ) : (
                     <>
                       {patient.last_consultation?.patient_no && (
-                        <Chip
+                        <Badge
                           size="small"
                           variant="primary"
-                          text={`${patient.last_consultation?.suggestion === "A" ? "IP No:" : "OP No:"} ${
-                            patient.last_consultation?.patient_no
-                          }`}
-                        />
+                        >
+                          {`${patient.last_consultation?.suggestion === "A" ? "IP No:" : "OP No:"} ${patient.last_consultation?.patient_no
+                            }`}
+                        </Badge>
+
                       )}
                     </>
                   )}
@@ -603,44 +608,48 @@ export const PatientManager = () => {
                         <i className="icon-class l-clock"></i>
                         {dayjs().isAfter(patient.review_time)
                           ? `Review Missed ${Math.abs(
-                              dayjs().diff(dayjs(patient.review_time), "days"),
-                            )} days ago`
+                            dayjs().diff(dayjs(patient.review_time), "days"),
+                          )} days ago`
                           : `Review Due in ${Math.abs(
-                              dayjs(patient.review_time).diff(dayjs(), "days"),
-                            )} days`}
+                            dayjs(patient.review_time).diff(dayjs(), "days"),
+                          )} days`}
                       </Badge>
                     )}
 
                   {patient.last_consultation?.suggestion === "A" &&
                     patient.last_consultation.facility === patient.facility &&
                     !patient.last_consultation.discharge_date && (
-                      <Chip
+                      <Badge
                         size="small"
                         variant="primary"
                         startIcon="l-clock-three"
-                        text={`IP Day No: ${dayjs().diff(patient.last_consultation.encounter_date, "day") + 1}`}
-                      />
+                      >
+                        {`IP Day No: ${dayjs().diff(patient.last_consultation.encounter_date, "day") + 1}`}
+                      </Badge>
+
                     )}
                   {patient.gender === 2 &&
                     patient.is_antenatal &&
                     isAntenatal(patient.last_menstruation_start_date) &&
                     patient.is_active && (
-                      <Chip
+                      <Badge
                         size="small"
                         variant="custom"
                         className="bg-pink-100 text-pink-600"
                         startIcon="l-baby-carriage"
-                        text="Antenatal"
-                      />
+                      >
+                        Antenatal
+                      </Badge>
                     )}
                   {patient.is_medical_worker && patient.is_active && (
-                    <Chip
+                    <Badge
                       size="small"
                       variant="custom"
                       className="bg-blue-100 text-blue-600"
                       startIcon="l-user-md"
-                      text="Medical Worker"
-                    />
+                    >
+                      Medical Worker
+                    </Badge>
                   )}
                   {!(
                     patient.last_consultation?.facility !== patient.facility
@@ -653,12 +662,14 @@ export const PatientManager = () => {
                       new Date().getTime() - 24 * 60 * 60 * 1000,
                     ) && (
                       <span className="relative inline-flex">
-                        <Chip
+                        <Badge
                           size="small"
-                          variant="danger"
+                          variant="destructive"
                           startIcon="l-exclamation-circle"
-                          text="No update in 24 hours"
-                        />
+                        >
+                          No update in 24 hours
+                        </Badge>
+
                         <span className="absolute -right-1 -top-1 flex h-3 w-3 items-center justify-center">
                           <span className="center absolute inline-flex h-4 w-4 animate-ping rounded-full bg-red-400"></span>
                           <span className="relative inline-flex h-3 w-3 rounded-full bg-red-600"></span>
@@ -1021,97 +1032,97 @@ export const PatientManager = () => {
             range,
             ordering,
           }) => [
-            phoneNumber("Primary number", "phone_number"),
-            phoneNumber("Emergency number", "emergency_phone_number"),
-            badge("Patient name", "name"),
-            badge("IP/OP number", "patient_no"),
-            ...dateRange("Modified", "modified_date"),
-            ...dateRange("Created", "created_date"),
-            ...dateRange("Admitted", "last_consultation_encounter_date"),
-            ...dateRange("Discharged", "last_consultation_discharge_date"),
-            // Admitted to type badges
-            badge("No. of vaccination doses", "number_of_doses"),
-            kasp(),
-            badge("COWIN ID", "covin_id"),
-            badge("Is Antenatal", "is_antenatal"),
-            badge("Review Missed", "review_missed"),
-            badge(
-              "Is Medico-Legal Case",
-              "last_consultation_medico_legal_case",
-            ),
-            value(
-              "Ration Card Category",
-              "ration_card_category",
-              qParams.ration_card_category
-                ? t(`ration_card__${qParams.ration_card_category}`)
-                : "",
-            ),
-            value(
-              "Facility",
-              "facility",
-              qParams.facility ? facilityData?.name || "" : "",
-            ),
-            value(
-              "Location",
-              "last_consultation_current_bed__location",
-              qParams.last_consultation_current_bed__location
-                ? facilityAssetLocationData?.name ||
-                    qParams.last_consultation_current_bed__locations
-                : "",
-            ),
-            badge("Facility Type", "facility_type"),
-            value(
-              "District",
-              "district",
-              qParams.district ? districtData?.name || "" : "",
-            ),
-            ordering(),
-            value("Category", "category", getTheCategoryFromId()),
-            value(
-              "Respiratory Support",
-              "ventilator_interface",
-              qParams.ventilator_interface &&
-                t(`RESPIRATORY_SUPPORT_SHORT__${qParams.ventilator_interface}`),
-            ),
-            value(
-              "Gender",
-              "gender",
-              parseOptionId(GENDER_TYPES, qParams.gender) || "",
-            ),
-            {
-              name: "Admitted to",
-              value: ADMITTED_TO[qParams.last_consultation_admitted_to],
-              paramKey: "last_consultation_admitted_to",
-            },
-            ...range("Age", "age"),
-            {
-              name: "LSG Body",
-              value: qParams.lsgBody ? LocalBodyData?.name || "" : "",
-              paramKey: "lsgBody",
-            },
-            ...FILTER_BY_DIAGNOSES_KEYS.map((key) =>
-              value(
-                DIAGNOSES_FILTER_LABELS[key],
-                key,
-                humanizeStrings(getDiagnosisFilterValue(key)),
+              phoneNumber("Primary number", "phone_number"),
+              phoneNumber("Emergency number", "emergency_phone_number"),
+              badge("Patient name", "name"),
+              badge("IP/OP number", "patient_no"),
+              ...dateRange("Modified", "modified_date"),
+              ...dateRange("Created", "created_date"),
+              ...dateRange("Admitted", "last_consultation_encounter_date"),
+              ...dateRange("Discharged", "last_consultation_discharge_date"),
+              // Admitted to type badges
+              badge("No. of vaccination doses", "number_of_doses"),
+              kasp(),
+              badge("COWIN ID", "covin_id"),
+              badge("Is Antenatal", "is_antenatal"),
+              badge("Review Missed", "review_missed"),
+              badge(
+                "Is Medico-Legal Case",
+                "last_consultation_medico_legal_case",
               ),
-            ),
-            badge("Declared Status", "is_declared_positive"),
-            ...dateRange("Declared positive", "date_declared_positive"),
-            ...dateRange("Last vaccinated", "last_vaccinated_date"),
-            {
-              name: "Telemedicine",
-              paramKey: "last_consultation_is_telemedicine",
-            },
-            value(
-              "Discharge Reason",
-              "last_consultation__new_discharge_reason",
-              parseOptionId(
-                DISCHARGE_REASONS,
-                qParams.last_consultation__new_discharge_reason,
-              ) || "",
-            ),
-          ]}
+              value(
+                "Ration Card Category",
+                "ration_card_category",
+                qParams.ration_card_category
+                  ? t(`ration_card__${qParams.ration_card_category}`)
+                  : "",
+              ),
+              value(
+                "Facility",
+                "facility",
+                qParams.facility ? facilityData?.name || "" : "",
+              ),
+              value(
+                "Location",
+                "last_consultation_current_bed__location",
+                qParams.last_consultation_current_bed__location
+                  ? facilityAssetLocationData?.name ||
+                  qParams.last_consultation_current_bed__locations
+                  : "",
+              ),
+              badge("Facility Type", "facility_type"),
+              value(
+                "District",
+                "district",
+                qParams.district ? districtData?.name || "" : "",
+              ),
+              ordering(),
+              value("Category", "category", getTheCategoryFromId()),
+              value(
+                "Respiratory Support",
+                "ventilator_interface",
+                qParams.ventilator_interface &&
+                t(`RESPIRATORY_SUPPORT_SHORT__${qParams.ventilator_interface}`),
+              ),
+              value(
+                "Gender",
+                "gender",
+                parseOptionId(GENDER_TYPES, qParams.gender) || "",
+              ),
+              {
+                name: "Admitted to",
+                value: ADMITTED_TO[qParams.last_consultation_admitted_to],
+                paramKey: "last_consultation_admitted_to",
+              },
+              ...range("Age", "age"),
+              {
+                name: "LSG Body",
+                value: qParams.lsgBody ? LocalBodyData?.name || "" : "",
+                paramKey: "lsgBody",
+              },
+              ...FILTER_BY_DIAGNOSES_KEYS.map((key) =>
+                value(
+                  DIAGNOSES_FILTER_LABELS[key],
+                  key,
+                  humanizeStrings(getDiagnosisFilterValue(key)),
+                ),
+              ),
+              badge("Declared Status", "is_declared_positive"),
+              ...dateRange("Declared positive", "date_declared_positive"),
+              ...dateRange("Last vaccinated", "last_vaccinated_date"),
+              {
+                name: "Telemedicine",
+                paramKey: "last_consultation_is_telemedicine",
+              },
+              value(
+                "Discharge Reason",
+                "last_consultation__new_discharge_reason",
+                parseOptionId(
+                  DISCHARGE_REASONS,
+                  qParams.last_consultation__new_discharge_reason,
+                ) || "",
+              ),
+            ]}
           children={
             (qParams.last_consultation_admitted_bed_type_list ||
               qParams.last_consultation__consent_types) && (
