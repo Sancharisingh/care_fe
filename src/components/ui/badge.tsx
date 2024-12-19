@@ -1,5 +1,6 @@
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
+import CareIcon, { IconName } from "@/CAREUI/icons/CareIcon";
 
 import { cn } from "@/lib/utils";
 
@@ -18,27 +19,52 @@ const badgeVariants = cva(
           "border-transparent bg-yellow-400 text-gray-900 shadow hover:bg-yellow-500 dark:bg-yellow-400 dark:text-gray-900 dark:hover:bg-yellow-500",
         outline: "text-gray-950 dark:text-gray-50",
         primary:
-          "border-transparent bg-primary-500 text-gray-50 shadow hover:bg-primary-500/80 dark:bg-primary-900 dark:text-gray-50 dark:hover:bg-primary-900/80",
+          "border-transparent bg-green-500 text-gray-50 shadow hover:bg-green-500/80 dark:bg-green-900 dark:text-gray-50 dark:hover:bg-green-900/80",
+        custom: "",
+      },
+      size: {
+        small: "rounded px-2 py-1 text-xs",
+        medium: "rounded-lg px-3 py-2 text-xs",
+        large: "rounded-lg px-4 py-3 text-sm",
       },
     },
     defaultVariants: {
       variant: "default",
+      size: "medium",
     },
   },
 );
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
+    VariantProps<typeof badgeVariants> {
+  startIcon?: IconName;
+  endIcon?: IconName;
+  tooltip?: string;
+}
 
-function Badge({ className, variant, ...props }: BadgeProps) {
+function Badge({
+  className,
+  variant,
+  size,
+  startIcon,
+  endIcon,
+  tooltip,
+  children,
+  ...props
+}: BadgeProps) {
   return (
     <div
       role="status"
-      aria-label={props.children?.toString()}
-      className={cn(badgeVariants({ variant }), className)}
+      aria-label={tooltip || children?.toString()}
+      className={cn(badgeVariants({ variant, size }), className)}
+      title={tooltip}
       {...props}
-    />
+    >
+      {startIcon && <CareIcon icon={startIcon} className="mr-1" />}
+      <span>{children}</span>
+      {endIcon && <CareIcon icon={endIcon} className="ml-1" />}
+    </div>
   );
 }
 
