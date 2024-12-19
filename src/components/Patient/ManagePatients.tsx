@@ -31,7 +31,6 @@ import { parseOptionId } from "@/common/utils";
 
 import routes from "@/Utils/request/api";
 
-// import Chip from "../../CAREUI/display/Chip";
 import CountBlock from "../../CAREUI/display/Count";
 import FilterBadge from "../../CAREUI/display/FilterBadge";
 import RecordMeta from "../../CAREUI/display/RecordMeta";
